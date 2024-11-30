@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Union
 from passlib.context import CryptContext
 from .models import User
-from fastapi import HTTPException
+from fastapi import Request, HTTPException, Depends
 import os
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -53,9 +53,19 @@ def create_access_token(data: dict, expires_delta: timedelta = None) -> str:
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-def verify_access_token(token: str) -> Union[dict, None]:
+def verify_access_token(request: Request):
+    # Extrai o token do cabeçalho Authorization
+    token = request.headers.get("Authorization")
+    
+    if token is None:
+        raise HTTPException(status_code=401, detail="Authorization token is missing")
+    
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
-        return payload
-    except JWTError:
-        return None
+        # Remove o prefixo "Bearer" se houver
+        token = token.replace("Bearer ", "")
+        payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])  # Verifica a assinatura e decodifica o token
+        return payload  # Retorna o payload do token para ser usado na rota
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token has expired")
+    except jwt.JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
