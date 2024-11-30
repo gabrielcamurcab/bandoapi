@@ -1,0 +1,60 @@
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+__pypackages__/
+.env
+.venv
+venv/
+env/
+*.egg-info
+*.egg
+dist/
+build/
+
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+
+# Node.js (caso use o Node.js em algum lugar no projeto)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Logs
+*.log
+
+# Teste e relatórios de cobertura
+.coverage
+nosetests.xml
+coverage.xml
+*.cover
+*.gcov
+*.lcov
+*.prof
+*.dat
+
+# Banco de dados SQLite (se você usar SQLite)
+*.sqlite3
+
+# Arquivos de configuração do sistema
+.DS_Store
+Thumbs.db
+
+# FastAPI (arquivos temporários e de cache)
+*.db
+*.sqlite
+
+# Dependências de pacotes Python
+Pipfile.lock
+poetry.lock
+
+# IDEs específicas e cache
+*.sublime-workspace
+*.sublime-project
+
+# Arquivos de backup e temporários
+*.swp
