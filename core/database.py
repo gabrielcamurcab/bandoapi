@@ -29,3 +29,12 @@ SessionLocal = sessionmaker(
 
 # Conexão assíncrona com o banco de dados usando 'databases'
 database = Database(DATABASE_URL)
+
+
+# Dependency: Obter uma sessão de banco de dados assíncrona
+async def get_db():
+    async with SessionLocal() as db:
+        try:
+            yield db
+        finally:
+            await db.close()

@@ -1,25 +1,16 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from database.database import database, SessionLocal
+from core.database import database
+from features.auth.routes import router as user_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await database.connect()
-    yield
-    await database.disconnect()
+    try:
+        await database.connect()
+        yield
+    finally:
+        await database.disconnect()
 
 app = FastAPI(lifespan=lifespan)
 
-@app.get("/")
-async def read_root():
-    return {"message": "Hello, world!"}
-
-@app.get("/items/{item_id}")
-async def read_item(item_id: int, q: str = None):
-    return {"item_id": item_id, "q": q}
-
-@app.get("/db")
-async def db():
-    query = "SELECT * FROM users"
-    result = await database.fetch_all(query)
-    return {"data": result}
+app.include_router(user_router, prefix="/api", tags=["users"])
