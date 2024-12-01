@@ -33,7 +33,7 @@ BandoAPI é uma aplicação backend desenvolvida com **Python** e **FastAPI**, p
 
 1. **Clone o repositório**:
    ```bash
-   git clone https://github.com/seu-usuario/bandoapi.git
+   git clone https://github.com/gabrielcamurcab/bandoapi.git
    cd bandoapi
    ```
 
