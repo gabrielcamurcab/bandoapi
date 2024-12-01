@@ -23,9 +23,19 @@ class Post(BaseModel):
     class Config:
         orm_mode = True
 
-class PostResponse(BaseModel):
+class PostCreateResponse(BaseModel):
     message: str
     id: int
+
+    class Config:
+        orm_mode = True
+
+class PostResponse(BaseModel):
+    id: int
+    content: str
+    user_id: int
+    reply_for: Optional[int]
+    is_deleted: bool
 
 class PostDB(Base):
     __tablename__ = "posts"

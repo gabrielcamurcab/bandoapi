@@ -1,6 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from .models import PostCreate, PostDB
 from ..user.models import User
+from sqlalchemy.future import select
 from ..user.crud import get_user_by_email
 from fastapi import HTTPException
 
@@ -20,3 +21,9 @@ async def create_post(db: AsyncSession, user_email: str, post_data: PostCreate):
         await session.commit()
         await session.refresh(new_post)
         return new_post
+    
+async def get_posts_by_user(db: AsyncSession, user_id: int):
+    async with db as session:
+        result = await session.execute(select(PostDB).filter(PostDB.user_id == user_id))
+        posts = result.scalars().all()
+        return posts
