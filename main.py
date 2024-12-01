@@ -12,7 +12,10 @@ async def lifespan(app: FastAPI):
     finally:
         await database.disconnect()
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan,
+              title="BandoAPI",
+              description="API para praticar Python + FastAPI, com funcionalidades do X/Twitter.",
+              version="1.0.0")
 
 app.include_router(user_router, prefix="/api", tags=["users"])
 app.include_router(post_router, prefix="/api", tags=["posts"])
