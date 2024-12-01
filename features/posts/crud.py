@@ -24,6 +24,21 @@ async def create_post(db: AsyncSession, user_email: str, post_data: PostCreate):
     
 async def get_posts_by_user(db: AsyncSession, user_id: int):
     async with db as session:
-        result = await session.execute(select(PostDB).filter(PostDB.user_id == user_id))
+        result = await session.execute(select(PostDB).filter(PostDB.user_id == user_id, PostDB.is_deleted == False))
         posts = result.scalars().all()
         return posts
+    
+async def delete_post(db: AsyncSession, post_id: int, user_email = str):
+    async with db as session:
+        user = await get_user_by_email(db, user_email)
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        result = await session.execute(select(PostDB).filter(PostDB.id == post_id, PostDB.user_id == user.id, PostDB.is_deleted == False))
+        post = result.scalars().first()
+        if not post:
+            raise HTTPException(status_code=404, detail="Post not found")
+
+        post.is_deleted = True
+        await session.commit()
+        return post

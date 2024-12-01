@@ -23,6 +23,9 @@ class Post(BaseModel):
     class Config:
         orm_mode = True
 
+class GenericResponse(BaseModel):
+    message: str
+
 class PostCreateResponse(BaseModel):
     message: str
     id: int
